@@ -1,0 +1,114 @@
+[
+  {
+    "note_id": 1,
+    "substation_id": "industrial_area",
+    "logged_at": "2026-11-12T09:40:00+03:00",
+    "author": "A. Mwangi",
+    "category": "voltage_quality",
+    "note": "Three industrial customers in Industrial Area reported voltage sag events during the morning shift. Correlates with the steel plant arc furnace startup around 09:30. Busbar voltage dipped to 0.92 pu for roughly eight seconds."
+  },
+  {
+    "note_id": 2,
+    "substation_id": "nairobi_west",
+    "logged_at": "2026-11-12T10:15:00+03:00",
+    "author": "J. Otieno",
+    "category": "maintenance",
+    "note": "Completed quarterly maintenance on transformer T2 at Nairobi West. Dissolved gas analysis samples taken; results expected from the lab within five working days. Cooling bank B fans cleaned and tested."
+  },
+  {
+    "note_id": 3,
+    "substation_id": "nakuru_north",
+    "logged_at": "2026-11-12T11:05:00+03:00",
+    "author": "R. Kiptoo",
+    "category": "equipment_fault",
+    "note": "Capacitor bank C1 at Nakuru North tripped on unbalance protection. Fuse on phase B can blown. Replacement fuse scheduled for the afternoon switching window."
+  },
+  {
+    "note_id": 4,
+    "substation_id": "mombasa_island",
+    "logged_at": "2026-11-12T11:50:00+03:00",
+    "author": "S. Hassan",
+    "category": "planned_outage",
+    "note": "Planned outage at Mombasa Island feeder F3 next Tuesday 08:00-12:00 for vegetation clearance along the coastal corridor. Affected customers notified through the county office."
+  },
+  {
+    "note_id": 5,
+    "substation_id": "industrial_area",
+    "logged_at": "2026-11-12T12:30:00+03:00",
+    "author": "A. Mwangi",
+    "category": "load_transfer",
+    "note": "Load transfer of two feeders from Industrial Area to Nairobi West completed to relieve the heavily loaded transformer T1. Post-switching load split now within design margins."
+  },
+  {
+    "note_id": 6,
+    "substation_id": "nakuru_north",
+    "logged_at": "2026-11-12T13:10:00+03:00",
+    "author": "R. Kiptoo",
+    "category": "scada",
+    "note": "Intermittent SCADA communication loss with Nakuru North RTU. DNP3 polling timeouts observed for six minutes before link recovered. Vendor ticket opened for the radio modem."
+  },
+  {
+    "note_id": 7,
+    "substation_id": "nairobi_west",
+    "logged_at": "2026-11-12T13:45:00+03:00",
+    "author": "J. Otieno",
+    "category": "voltage_quality",
+    "note": "Residential complaints in the Nairobi West supply area about flickering lights in the evening peak. Initial checks point to a loose tap on the distribution transformer rather than upstream sag."
+  },
+  {
+    "note_id": 8,
+    "substation_id": "mombasa_island",
+    "logged_at": "2026-11-12T14:20:00+03:00",
+    "author": "S. Hassan",
+    "category": "equipment_fault",
+    "note": "Lightning arrestor on the Mombasa Island incoming bay replaced after the coastal storm. Insulation resistance test passed at 5 GOhm. Recloser counters reset and verified."
+  },
+  {
+    "note_id": 9,
+    "substation_id": "industrial_area",
+    "logged_at": "2026-11-12T14:55:00+03:00",
+    "author": "P. Njoroge",
+    "category": "power_quality",
+    "note": "Harmonic distortion measured at Industrial Area exceeded the 5 percent THD limit during the factory shift. Traced to a cement plant variable speed drive operating without its harmonic filter."
+  },
+  {
+    "note_id": 10,
+    "substation_id": "nakuru_north",
+    "logged_at": "2026-11-12T15:30:00+03:00",
+    "author": "R. Kiptoo",
+    "category": "maintenance",
+    "note": "Transformer oil level top-up completed at Nakuru North after the routine inspection found a slow gasket seep on the main tank. Gasket replacement booked for the next planned outage."
+  },
+  {
+    "note_id": 11,
+    "substation_id": "nairobi_west",
+    "logged_at": "2026-11-12T16:00:00+03:00",
+    "author": "P. Njoroge",
+    "category": "protection",
+    "note": "Distance protection relay at Nairobi West picked up on a transient fault and reclosed successfully. Fault locator placed the event 4.2 km out on the Kikuyu feeder; patrol team dispatched."
+  },
+  {
+    "note_id": 12,
+    "substation_id": "mombasa_island",
+    "logged_at": "2026-11-12T16:35:00+03:00",
+    "author": "S. Hassan",
+    "category": "load_transfer",
+    "note": "Emergency load transfer executed at Mombasa Island after the port cold-storage expansion pushed feeder F1 above its emergency rating. Shedd 1.8 MW onto the standby interconnector for two hours."
+  },
+  {
+    "note_id": 13,
+    "substation_id": "industrial_area",
+    "logged_at": "2026-11-12T17:10:00+03:00",
+    "author": "A. Mwangi",
+    "category": "voltage_quality",
+    "note": "Voltage regulation study requested for Industrial Area evening shift. LTC tap position data logged for one week starting today to quantify the daily regulation duty on transformer T1."
+  },
+  {
+    "note_id": 14,
+    "substation_id": "nakuru_north",
+    "logged_at": "2026-11-12T17:40:00+03:00",
+    "author": "P. Njoroge",
+    "category": "protection",
+    "note": "Station battery bank discharge test at Nakuru North completed. Runtime measured at 7.4 hours against a 6-hour requirement. One cell flagged for monitoring, replacement ordered."
+  }
+]
