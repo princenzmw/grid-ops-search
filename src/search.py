@@ -45,7 +45,7 @@ def find_notes(conn, settings, query_vector, k: int) -> list[dict]:
             (query_vector, query_vector, k),
         )
         columns = [desc.name for desc in cur.description]
-        return [dict(zip(columns, row)) for row in cur.fetchall()]
+        return [dict(zip(columns, row, strict=True)) for row in cur.fetchall()]
 
 
 def telemetry_window(conn, settings, substation_id: str, centre: dt.datetime,

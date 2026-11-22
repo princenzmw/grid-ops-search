@@ -1,5 +1,7 @@
 # grid-ops-search: semantic search over grid operations on Tiger Data
 
+[![grid-ops-search CI](https://img.shields.io/github/actions/workflow/status/princenzmw/grid-ops-search/ci.yml?branch=main&style=flat-square&label=CI&logo=githubactions&logoColor=white)](https://github.com/princenzmw/grid-ops-search/actions/workflows/ci.yml)
+
 Grid-ops-search stores vector embeddings alongside time-series telemetry in one Tiger Data (TimescaleDB) database and joins them in SQL. The [VoltStream](https://github.com/princenzmw/voltstream) simulator streams substation load and voltage readings into a `grid_readings` hypertable. This project adds operational notes (maintenance logs, fault reports, switching operations) embedded with pgvector and indexed with pgvectorscale StreamingDiskANN in the same database, then answers natural-language queries by joining both tables:
 
 > "voltage sag complaints" -> matching operational notes plus the 5-minute load and voltage telemetry around each event.
@@ -74,6 +76,27 @@ python -m src.search "protection relay operation" --k 3 --window 45
 ```
 
 Each match prints the note, its cosine similarity, and the 5-minute average load and voltage telemetry around the event.
+
+## Sample query output
+
+Measured with the deterministic hashing provider (`EMBEDDING_PROVIDER=hashing`, 1536 dimensions) against `corpus/ops_notes.json` for query `"voltage sag complaints"`:
+
+```text
+similarity 0.357 | note_id #1 | industrial_area | voltage_quality
+  Three industrial customers in Industrial Area reported voltage sag events during the morning shift...
+similarity 0.280 | note_id #7 | nairobi_west | voltage_quality
+  Residential complaints in the Nairobi West supply area about flickering lights in the evening peak...
+similarity 0.230 | note_id #2 | nairobi_west | maintenance
+  Completed quarterly maintenance on transformer T2 at Nairobi West...
+```
+
+## Running tests
+
+```bash
+pip install -r requirements.txt -r requirements-dev.txt
+ruff check .
+pytest -v
+```
 
 ## Embedding providers
 

@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Iterator
 
 import psycopg
 from pgvector.psycopg import register_vector
@@ -148,11 +148,11 @@ def resolve_substation_map(
     if unresolved:
         lines.append(
             "UNRESOLVED: " + ", ".join(unresolved)
-            + f" — the telemetry table stores these substation_id values: "
+            + " - the telemetry table stores these substation_id values: "
             + ", ".join(str(value) for value in present)
             + f" (column type {column_type}). Add them to SUBSTATION_ID_MAP "
             + "in src/config.py, e.g. " + ", ".join(
-                f"{key!r}: {value!r}" for key, value in list(zip(unresolved, present))[:4]
+                f"{key!r}: {value!r}" for key, value in list(zip(unresolved, present, strict=False))[:4]
             )
         )
 

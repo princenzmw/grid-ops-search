@@ -103,7 +103,7 @@ def main() -> None:
             try:
                 cur.execute("CREATE EXTENSION IF NOT EXISTS vectorscale")
                 print("Extension ready: vectorscale (StreamingDiskANN index)")
-            except Exception:
+            except psycopg.Error:
                 conn.rollback()
                 print(
                     "vectorscale unavailable — falling back to HNSW "
@@ -180,7 +180,7 @@ def main() -> None:
 
     with connect() as conn:
         with conn.cursor() as cur:
-            for note, vector in zip(notes, vectors):
+            for note, vector in zip(notes, vectors, strict=True):
                 cur.execute(
                     f"""
                     INSERT INTO {settings.ops_table}

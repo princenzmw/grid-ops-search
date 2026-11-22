@@ -8,6 +8,8 @@ misaligned.
 
 from __future__ import annotations
 
+import psycopg
+
 from src.config import load_settings
 from src.db import (
     connect,
@@ -62,7 +64,8 @@ def _catalog_name(conn, value) -> str:
                     (value,),
                 )
                 row = cur.fetchone()
-            except Exception:
+            except psycopg.Error as exc:
+                print(f"note: skipping catalog lookup on {table_name} ({exc})")
                 continue
             if row and row[0]:
                 return str(row[0])
