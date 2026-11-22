@@ -1,6 +1,6 @@
 # grid-ops-search — semantic search over grid operations, powered by pgvector + pgvectorscale on Tiger Data
 
-Grid-ops-search stores **high-dimensional vector embeddings alongside time-series data** in a single Tiger Data (TimescaleDB) service, then joins them back together. It is the human-context layer for a live grid-telemetry workload: the [VoltStream](https://github.com/princenzmw) simulator streams substation load and voltage readings into a `grid_readings` hypertable; this project adds operational notes — maintenance logs, fault reports, switching operations — embedded with **pgvector** and indexed with **pgvectorscale's StreamingDiskANN** in the *same database*, and answers natural-language queries by combining the two:
+Grid-ops-search stores **high-dimensional vector embeddings alongside time-series data** in a single Tiger Data (TimescaleDB) service, then joins them back together. It is the human-context layer for a live grid-telemetry workload: the [VoltStream](https://github.com/princenzmw/voltstream) simulator streams substation load and voltage readings into a `grid_readings` hypertable; this project adds operational notes — maintenance logs, fault reports, switching operations — embedded with **pgvector** and indexed with **pgvectorscale's StreamingDiskANN** in the *same database*, and answers natural-language queries by combining the two:
 
 > "voltage sag complaints" → the matching ops notes **and** the 5-minute load/voltage telemetry around each event.
 
