@@ -73,6 +73,7 @@ python -m src.init_db --anchor-to-data
 python -m src.search "voltage sag complaints"
 python -m src.search "transformer maintenance and oil"
 python -m src.search "protection relay operation" --k 3 --window 45
+python -m src.search "voltage sag complaints" --k 3 --json
 ```
 
 Each match prints the note, its cosine similarity, and the 5-minute average load and voltage telemetry around the event.

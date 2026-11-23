@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
+from collections.abc import Sequence
 
 import psycopg
 from rich.console import Console
@@ -101,27 +103,85 @@ def render(note: dict, rows: list[tuple]) -> None:
     console.print(table, end="\n\n")
 
 
-def main() -> None:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("query", help="natural-language search query")
     parser.add_argument("--k", type=int, default=4, help="number of matches")
     parser.add_argument(
         "--window", type=int, default=30, help="telemetry window in minutes"
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="as_json",
+        help="emit machine-readable JSON to stdout",
+    )
+    return parser
+
+
+def format_match_payload(note: dict, rows: list[tuple]) -> dict:
+    """Serialize one matched note and its telemetry rollup into JSON-safe types."""
+    logged_at = note["logged_at"]
+    logged_iso = (
+        logged_at.isoformat() if isinstance(logged_at, dt.datetime) else str(logged_at)
+    )
+    telemetry = [
+        {
+            "bucket": bucket.isoformat()
+            if isinstance(bucket, dt.datetime)
+            else str(bucket),
+            "avg_load_mw": float(load) if load is not None else None,
+            "avg_voltage_kv": float(voltage) if voltage is not None else None,
+        }
+        for bucket, load, voltage in rows
+    ]
+    return {
+        "note_id": note["note_id"],
+        "substation_id": note["substation_id"],
+        "logged_at": logged_iso,
+        "author": note["author"],
+        "category": note["category"],
+        "note": note["note"],
+        "similarity": round(float(note["similarity"]), 6),
+        "telemetry": telemetry,
+    }
+
+
+def main(argv: Sequence[str] | None = None) -> None:
+    args = build_parser().parse_args(argv)
 
     settings = load_settings()
     result = embed_texts([args.query], settings)
-    console.print(
-        f"[bold]grid-ops-search[/bold]  provider={result.provider}  "
-        f"model={result.model}  query={args.query!r}\n"
-    )
+    if not args.as_json:
+        console.print(
+            f"[bold]grid-ops-search[/bold]  provider={result.provider}  "
+            f"model={result.model}  query={args.query!r}\n"
+        )
 
     with connect() as conn:
         matches = find_notes(conn, settings, result.vector, args.k)
         if not matches:
-            console.print("[red]No notes stored yet — run python -m src.init_db first.[/red]")
+            if args.as_json:
+                print(
+                    json.dumps(
+                        {
+                            "query": args.query,
+                            "provider": result.provider,
+                            "model": result.model,
+                            "k": args.k,
+                            "window_minutes": args.window,
+                            "matches": [],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                console.print(
+                    "[red]No notes stored yet: run python -m src.init_db first.[/red]"
+                )
             return
+
+        payload_matches: list[dict] = []
         for note in matches:
             try:
                 rows = telemetry_window(
@@ -129,16 +189,35 @@ def main() -> None:
                 )
             except psycopg.errors.InvalidTextRepresentation:
                 conn.rollback()
-                console.print(
-                    "[yellow]The note's substation_id does not match the "
-                    "telemetry table's column type. Notes were loaded with an "
-                    "outdated mapping — rerun:[/yellow] "
-                    "[bold]python -m src.init_db --anchor-to-data[/bold] "
-                    "[yellow](it auto-resolves corpus IDs against "
-                    "grid_readings; see also python -m src.inspect)[/yellow]"
-                )
+                if not args.as_json:
+                    console.print(
+                        "[yellow]The note's substation_id does not match the "
+                        "telemetry table's column type. Notes were loaded with an "
+                        "outdated mapping. Rerun:[/yellow] "
+                        "[bold]python -m src.init_db --anchor-to-data[/bold] "
+                        "[yellow](it auto-resolves corpus IDs against "
+                        "grid_readings; see also python -m src.inspect)[/yellow]"
+                    )
                 rows = []
-            render(note, rows)
+            if args.as_json:
+                payload_matches.append(format_match_payload(note, rows))
+            else:
+                render(note, rows)
+
+        if args.as_json:
+            print(
+                json.dumps(
+                    {
+                        "query": args.query,
+                        "provider": result.provider,
+                        "model": result.model,
+                        "k": args.k,
+                        "window_minutes": args.window,
+                        "matches": payload_matches,
+                    },
+                    indent=2,
+                )
+            )
 
 
 if __name__ == "__main__":
